@@ -1,4 +1,4 @@
-export const BRI_URL = 'https://bridev.qore.run/admin/external-apps'
+export const BRI_URL = 'https://bridev.qore.run'
 export const BASE_URL = 'https://example-isolated-app.vercel.app'
 export const SUPERADMIN_CREDENTIALS = {
     name: 'Admin',
