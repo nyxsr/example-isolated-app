@@ -2,8 +2,6 @@ import { setToken, verifyToken } from "@/lib/auth";
 import { decryptData } from "@/lib/decryptor";
 import validateKeyPair from "@/lib/validate-key-pair";
 import { NextApiRequest, NextApiResponse } from "next";
-import fs from "fs";
-import path from "path";
 import { ALLOWED_EMAIL_USERS, BRI_URL } from "@/lib/constants";
 
 const privateKey = process.env.PRIVATE_KEY;
@@ -44,9 +42,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(400).send({ message: "Invalid or missing code" });
     }
 
+    if (!privateKey) {
+      return res.status(400).send({ message: "Missing private key" });
+    }
+
     try {
       const { email, name, createdAt, referer, accessToken, publicKey } =
-        decryptData(code, privateKey);
+        decryptData(code, privateKey as string);
 
       if (!email || !name || !createdAt || !referer) {
         return res.status(400).send({ message: "Invalid data" });
