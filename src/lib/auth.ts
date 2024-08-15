@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Read the private and public keys
-const privateKey = fs.readFileSync(path.join(process.cwd(), 'private.pem'));
+const privateKey = process.env.PRIVATE_KEY 
 
 interface TokenPayload {
   username: string;
@@ -12,6 +12,9 @@ interface TokenPayload {
 }
 
 export function createToken(payload: TokenPayload): string {
+  if (!privateKey) {
+    throw new Error('Private key not found');
+  }
   return jwt.sign(payload, privateKey, { 
     algorithm: 'RS256',
     expiresIn: '1h'

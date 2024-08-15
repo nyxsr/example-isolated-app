@@ -1,11 +1,13 @@
 import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
 
 function validateKeyPair(publicKey: string): boolean {
   try {
     // Read the private and public keys
-    const privateKey = fs.readFileSync(path.join(process.cwd(), 'private.pem'));
+    const privateKey = process.env.PRIVATE_KEY
+    
+    if (!privateKey) {
+      throw new Error('Private key not found');
+    }
 
     // Create a test message
     const testMessage = 'Test message for RSA key pair validation';
