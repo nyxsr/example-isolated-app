@@ -1,7 +1,5 @@
 import jwt from 'jsonwebtoken';
 import Cookies from 'js-cookie';
-import fs from 'fs';
-import path from 'path';
 
 // Read the private and public keys
 const privateKey = process.env.PRIVATE_KEY 

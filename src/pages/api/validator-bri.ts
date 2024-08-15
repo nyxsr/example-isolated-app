@@ -19,6 +19,8 @@ export default function handler(
       return res.status(400).json({ error: "Missing referer" });
     }
 
+    console.log(`referer: ${referer}`)
+
     if (referer !== BRI_URL) {
       return res.status(400).json({ error: "Invalid referer" });
     }
