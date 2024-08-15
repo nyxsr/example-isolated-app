@@ -6,8 +6,7 @@ import fs from "fs";
 import path from "path";
 import { ALLOWED_EMAIL_USERS, BRI_URL } from "@/lib/constants";
 
-const privateKeyPath = path.join(process.cwd(), "private.pem");
-const privateKey = fs.readFileSync(privateKeyPath, "utf8");
+const privateKey = process.env.PRIVATE_KEY;
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     const { public_key: publicKey } = req.body;
