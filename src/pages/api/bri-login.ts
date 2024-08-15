@@ -78,7 +78,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
       res.setHeader("Set-Cookie", `token=${accessToken}; Path=/; HttpOnly`);
       res.status(200).send({
-        message: "valid",
+      message: "valid",
         data: { email, name, createdAt },
         code: "BRIDevStud10_Success",
       });

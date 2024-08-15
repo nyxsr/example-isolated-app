@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { createToken } from "@/lib/auth";
 import { BASE_URL, BRI_URL } from "@/lib/constants";
 import validateKeyPair from "@/lib/validate-key-pair";
