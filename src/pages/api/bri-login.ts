@@ -54,7 +54,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return res.status(400).send({ message: "Invalid data" });
       }
 
-      if (referer !== BRI_URL) {
+      if (!BRI_URL.includes(referer)) {
         return res.status(400).send({ message: "Invalid referer" });
       }
 
@@ -73,13 +73,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
       // Verify token
       const isTokenValid = verifyToken(accessToken || "", publicKey as string);
-      if (!isTokenValid || isTokenValid.username !== 'superadmin') {
+      if (!isTokenValid || isTokenValid.username !== "superadmin") {
         return res.status(400).json({ error: "Invalid token" });
       }
 
       res.setHeader("Set-Cookie", `token=${accessToken}; Path=/; HttpOnly`);
       res.status(200).send({
-      message: "valid",
+        message: "valid",
         data: { email, name, createdAt },
         code: "BRIDevStud10_Success",
       });
