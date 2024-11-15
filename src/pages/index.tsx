@@ -1,12 +1,9 @@
-import { Inter } from "next/font/google";
 import { LampContainer } from "@/components/ui/lamp";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SUPERADMIN_CREDENTIALS } from "@/lib/constants";
 import { deleteTokenCookie } from "@/lib/utils";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const router = useRouter();
@@ -16,6 +13,9 @@ export default function Home() {
     name: string;
     createdAt: Date;
   } | null>(null);
+
+  const isLoggedIn = data !== null;
+
   const fetchData = async () => {
     try {
       const response = await fetch("/api/bri-login", {
@@ -27,15 +27,15 @@ export default function Home() {
       });
       if (response.ok) {
         const data = await response.json();
-        let credData = null
+        let credData = null;
         if (data.data.email === SUPERADMIN_CREDENTIALS.email) {
           credData = {
             ...SUPERADMIN_CREDENTIALS,
             createdAt: new Date(),
-          }
-          setData(credData)
-        }else{
-          credData = data.data
+          };
+          setData(credData);
+        } else {
+          credData = data.data;
           setData(data.data);
         }
         localStorage.setItem("data", JSON.stringify(credData));
@@ -52,23 +52,63 @@ export default function Home() {
       console.error(error);
     }
   };
-   const deleteCookie = async() => {
+  const deleteCookie = async () => {
     try {
-      await deleteTokenCookie()
+      await deleteTokenCookie();
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
+
+  const randomLogin = async () => {
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        let credData = null;
+        if (data.success) {
+          credData = {
+            ...data.user,
+            createdAt: new Date(),
+          };
+          setData(credData);
+        } else {
+          credData = data.user;
+          setData(data.user);
+        }
+        localStorage.setItem("data", JSON.stringify(credData));
+      } else {
+        console.error("Failed to fetch data");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const logOut = async () => {
+    try {
+      await deleteTokenCookie();
+      localStorage.removeItem("data");
+      setData(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const getUserfromLocalStorage = localStorage.getItem("data")
       ? JSON.parse(localStorage.getItem("data") as string)
       : null;
-  
+
     if (!getUserfromLocalStorage) {
-      deleteCookie() 
-    } 
-  
+      deleteCookie();
+    }
+
     setData(getUserfromLocalStorage);
   }, []);
 
@@ -91,6 +131,35 @@ export default function Home() {
       >
         {data?.name ? `Hi, ${data?.name}` : "Who are you ?"}
       </motion.h1>
+      {!isLoggedIn ? (
+        <motion.button
+          onClick={randomLogin}
+          initial={{ opacity: 0.5, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.3,
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
+          className="bg-white px-4 py-2 rounded-md dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
+        >
+          Login
+        </motion.button>
+      ) : (
+        <motion.button
+          onClick={logOut}
+          initial={{ opacity: 0.5, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.3,
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
+          className="bg-red-500 px-4 py-2 rounded-md text-white dark:bg-red-600 dark:text-white border-neutral-200 dark:border-slate-800"
+        >
+          Logout
+        </motion.button>
+      )}
     </LampContainer>
   );
 }
