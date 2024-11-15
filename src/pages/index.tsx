@@ -16,42 +16,47 @@ export default function Home() {
 
   const isLoggedIn = data !== null;
 
+  // Exclusive login path for BRIDev
   const fetchData = async () => {
-    try {
-      const response = await fetch("/api/bri-login", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ code }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        let credData = null;
-        if (data.data.email === SUPERADMIN_CREDENTIALS.email) {
-          credData = {
-            ...SUPERADMIN_CREDENTIALS,
-            createdAt: new Date(),
-          };
-          setData(credData);
-        } else {
-          credData = data.data;
-          setData(data.data);
-        }
-        localStorage.setItem("data", JSON.stringify(credData));
-        // Remove query code from url
-        router.push({ pathname: router.pathname, query: {} }, undefined, {
-          shallow: true,
-        });
-      } else {
-        console.error("Failed to fetch data");
-        // Redirect to https://bridev.qore.run
-        router.push("http://localhost:5173");
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   const response = await fetch("/api/bri-login", {
+    //     method: "PATCH",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ code }),
+    //   });
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     let credData = null;
+    //     if (data.data.email === SUPERADMIN_CREDENTIALS.email) {
+    //       credData = {
+    //         ...SUPERADMIN_CREDENTIALS,
+    //         createdAt: new Date(),
+    //       };
+    //       setData(credData);
+    //     } else {
+    //       credData = data.data;
+    //       setData(data.data);
+    //     }
+    //     localStorage.setItem("data", JSON.stringify(credData));
+    //     // Remove query code from url
+    //     router.push({ pathname: router.pathname, query: {} }, undefined, {
+    //       shallow: true,
+    //     });
+    //   } else {
+    //     console.error("Failed to fetch data");
+    //     // Redirect to https://bridev.qore.run
+    //     router.push("http://localhost:5173");
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    router.push({ pathname: router.pathname, query: {} }, undefined, {
+      shallow: true,
+    });
   };
+
   const deleteCookie = async () => {
     try {
       await deleteTokenCookie();
